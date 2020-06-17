@@ -26,10 +26,24 @@ public class TestBuffer {
         // 将 buffer 转换，读写切换(!!!)
         //flip  将position置为0，从头开始读
         intBuffer.flip();
+        //read(intBuffer);
+        readOnly(intBuffer);
+    }
 
+    public static void read(IntBuffer intBuffer){
         //判断是否还有元素，position=limit
         while (intBuffer.hasRemaining()) {
             System.out.println(intBuffer.get());
         }
+    }
+
+    public static void readOnly(IntBuffer intBuffer){
+        //只读buffer
+        IntBuffer readOnlyBuffer=intBuffer.asReadOnlyBuffer();
+        //判断是否还有元素，position=limit
+        while (intBuffer.hasRemaining()) {
+            System.out.println(intBuffer.get());
+        }
+        readOnlyBuffer.put(11);
     }
 }
