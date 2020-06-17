@@ -1,6 +1,5 @@
 package com.keith.nio;
 
-import java.nio.Buffer;
 import java.nio.IntBuffer;
 
 /**
@@ -21,12 +20,14 @@ public class TestBuffer {
         intBuffer.put(12);
         intBuffer.put(13);
         intBuffer.put(14);
+        //position=5
 
         //如何从 buffer 读取数据
         // 将 buffer 转换，读写切换(!!!)
+        //flip  将position置为0，从头开始读
         intBuffer.flip();
 
-        //判断是否还有元素
+        //判断是否还有元素，position=limit
         while (intBuffer.hasRemaining()) {
             System.out.println(intBuffer.get());
         }
