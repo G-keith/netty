@@ -45,6 +45,7 @@ public class TestChannel {
 
         ByteBuffer byteBuffer=ByteBuffer.allocate((int) file.length());
 
+        //从通道读取数据放入缓冲区
         fileChannel.read(byteBuffer);
         System.out.println(new String(byteBuffer.array()));
         fileInputStream.close();
@@ -61,6 +62,7 @@ public class TestChannel {
         FileOutputStream fileOutputStream=new FileOutputStream("/Users/gemi/Desktop/3.txt");
         FileChannel fileChannel2=fileOutputStream.getChannel();
         byteBuffer.flip();
+        //把缓冲区数据写入通道
         fileChannel2.write(byteBuffer);
 
         fileInputStream.close();
@@ -76,7 +78,8 @@ public class TestChannel {
         FileOutputStream fileOutputStream=new FileOutputStream("/Users/gemi/Desktop/3.txt");
         FileChannel fileChannel2=fileOutputStream.getChannel();
 
-        //transferFrom 复制通道信息
+        //transferFrom 复制通道(fileChannel)信息到fileChannel2
+        //transferTo   从当前通道(fileChannel2)复制给目标通道fileChannel
         fileChannel2.transferFrom(fileChannel,0,fileChannel.size());
 
         fileInputStream.close();
