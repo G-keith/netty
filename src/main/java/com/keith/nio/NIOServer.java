@@ -30,7 +30,6 @@ public class NIOServer {
 
         //创建 ServerSocketChannel注册到选择器
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
-
         while (true) {
             //这里我们等待 1 秒，如果没有事件发生, 返回
             if (selector.select(1000) == 0) {
@@ -41,6 +40,7 @@ public class NIOServer {
             ///如果返回的>0, 就获取到相关的 selectionKey 集合
             //获取SelectionKey集合
             Set<SelectionKey> selectionKeys = selector.selectedKeys();
+            System.out.println(selectionKeys.size()+"=======");
             //遍历 Set<SelectionKey>, 使用迭代器遍历
             Iterator<SelectionKey> keyIterator = selectionKeys.iterator();
             while (keyIterator.hasNext()) {
