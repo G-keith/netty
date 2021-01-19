@@ -38,7 +38,7 @@ public class GroupChatClient {
     public GroupChatClient() throws IOException {
         selector = Selector.open();
         //连接服务器
-        socketChannel = SocketChannel.open(new InetSocketAddress("127.0.0.1", PORT));
+        socketChannel = SocketChannel.open(new InetSocketAddress(HOST, PORT));
         //设置非阻塞
         socketChannel.configureBlocking(false);
         //将channel 注册到selector

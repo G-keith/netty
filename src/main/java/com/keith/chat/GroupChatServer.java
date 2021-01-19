@@ -35,6 +35,10 @@ public class GroupChatServer {
         }
     }
     /**
+     * selector.select()//阻塞，直到有注册的通道准备好了才会返回
+     * selector.select(1000);//阻塞1000毫秒，在1000毫秒后返回
+     * selector.wakeup();//唤醒selector
+     * selector.selectNow();//不阻塞，立马返还
      * 监听客户端信息
      */
     public void listen() {
@@ -54,11 +58,10 @@ public class GroupChatServer {
                         if (key.isAcceptable()) {
                             SocketChannel sc = listenChannel.accept();
                             sc.configureBlocking(false);
-                            //将该 sc 注册到seletor
+                            //将该 sc 注册到selector
                             sc.register(selector, SelectionKey.OP_READ);
                             //提示
                             System.out.println(sc.getRemoteAddress() + " 上线 ");
-                            System.out.println("在线人数：" + selector.keys().size()); //2,3,4..
                         }
                         //通道发送read事件，即通道是可读的状态
                         if (key.isReadable()) {
@@ -74,10 +77,6 @@ public class GroupChatServer {
             }
         } catch (Exception e) {
             e.printStackTrace();
-
-        } finally {
-            //发生异常处理....
-
         }
     }
 
@@ -86,7 +85,7 @@ public class GroupChatServer {
      * @param key
      */
     private void readData(SelectionKey key) {
-        //取到关联的channle
+        //取到关联的channel
         SocketChannel channel = null;
         try {
             //得到channel
@@ -113,16 +112,14 @@ public class GroupChatServer {
                 channel.close();
             } catch (IOException e2) {
                 e2.printStackTrace();
-                ;
             }
         }
     }
 
     /**
      * 转发消息给其它客户(通道)
-     * @param msg
-     * @param self
-     * @throws IOException
+     * @param msg 消息
+     * @param self 当前通道
      */
     private void sendInfoToOtherClients(String msg, SocketChannel self) throws IOException {
 
