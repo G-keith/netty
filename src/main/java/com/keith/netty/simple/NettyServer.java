@@ -27,7 +27,7 @@ public class NettyServer {
         /*
          *1.设置线程组
          * 2.使用NioSocketChannel作为服务器的通道实现
-         * 3.设置线程队列得到连接个数
+         * 3.设置线程队列可连接个数
          * 4.设置保持活动连接状态
          * 5.给workGroup的EventLoop对应的管道设置处理器
          *  5.1创建一个通道初始化对象
