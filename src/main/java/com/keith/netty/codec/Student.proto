@@ -6,3 +6,4 @@ message Student{
   int32 id = 1;// Student 类中有 一个属性 名字为 id 类型为int32(protobuf类型) 1表示属性序号，不是值
   string name = 32;
 }
+//protoc --java_out=. Student.proto
