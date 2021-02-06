@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keith.demo.mapper.gatewaychannel.GatewayChannelMapper">
+
+    <insert id="insertGatewayChannel">
+    insert into gateway_channel (gateway_code,channel_id,binding_time)
+    values
+    (#{gatewayCode,jdbcType=VARCHAR},#{channelId,jdbcType=VARCHAR},now())
+    </insert>
+
+    <delete id="deleteGatewayChannel">
+        delete from gateway_channel where channel_id=#{channelId,jdbcType=VARCHAR}
+    </delete>
+
+    <select id="findGatewayChannel" resultType="com.keith.demo.entity.GatewayChannel">
+        select * from gateway_channel where gateway_code=#{gatewayCode,jdbcType=VARCHAR}
+    </select>
+
+    <update id="updateGatewayCode">
+    update gateway_channel set
+    channel_id=#{channelId,jdbcType=VARCHAR},
+    binding_time=now()
+    where gateway_code=#{gatewayCode,jdbcType=VARCHAR}
+    </update>
+</mapper>
