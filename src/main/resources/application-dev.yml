@@ -10,20 +10,22 @@ spring:
       org:
         quartz:
           scheduler:
-            instanceName: DefaultQuartzScheduler
-            instanceId: AUTO
+            instanceName: DefaultQuartzScheduler #调度标识名 集群中每一个实例都必须使用相同的名称
+            instanceId: AUTO #分布式节点ID自动生成
           jobStore:
-            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX #数据保存方式为持久化
             driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
-            tablePrefix: qrtz_
-            isClustered: false
-            clusterCheckinInterval: 10000
-            useProperties: true
+            tablePrefix: qrtz_ #使用数据库qrtz_前缀的表
+            isClustered: false #是否开启集群
+            clusterCheckinInterval: 10000 #分布式节点有效性检查时间间隔，单位毫秒
+            #misfireThreshold: 60000 #第一个任务的执行完后的结束时间 减去 第二个任务的开始时间  大于 60s时， 第二个任务不会被执行。
+            useProperties: true #设置为TRUE不会出现序列化非字符串类到 BLOB 时产生的类版本问题
+            dataSource: qzDS #dataSource名称
           threadPool:
-            class: org.quartz.simpl.SimpleThreadPool
-            threadCount: 10
-            threadPriority: 5
-            threadsInheritContextClassLoaderOfInitializingThread: true
+            class: org.quartz.simpl.SimpleThreadPool #ThreadPool 实现的类名
+            threadCount: 10 #配置线程池线程数量，默认10
+            threadPriority: 5 #优先级，默认为5
+            threadsInheritContextClassLoaderOfInitializingThread: true #自创建父线程
           dataSource:
             qzDS:
               URL: ${spring.datasource.url}
@@ -31,8 +33,7 @@ spring:
               password: ${spring.datasource.password}
               driver: ${spring.datasource.driver-class-name}
               provider: hikaricp
-    #数据库方式
-    job-store-type: jdbc
+    job-store-type: jdbc     #数据库方式
   redis:
     host: 127.0.0.1
     port: 6379
