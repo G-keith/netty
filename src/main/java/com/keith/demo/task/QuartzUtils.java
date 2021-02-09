@@ -88,4 +88,15 @@ public class QuartzUtils {
         scheduler.unscheduleJob(TriggerKey.triggerKey(jobName, jobGroup));
         scheduler.deleteJob(JobKey.jobKey(jobName, jobGroup));
     }
+
+    /**
+     * 立即执行一次任务
+     * @param scheduler
+     * @param jobName
+     * @param jobGroup
+     * @throws SchedulerException
+     */
+    public static void triggerJob(Scheduler scheduler, String jobName, String jobGroup) throws SchedulerException {
+        scheduler.triggerJob(JobKey.jobKey(jobName, jobGroup));
+    }
 }

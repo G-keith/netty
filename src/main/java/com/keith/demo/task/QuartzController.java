@@ -54,4 +54,10 @@ public class QuartzController {
         return "OK";
     }
 
+    @GetMapping("/trigger")
+    public String triggerJob(String job) throws SchedulerException {
+        QuartzUtils.triggerJob(scheduler, job, "gateway");
+        return "OK";
+    }
+
 }
