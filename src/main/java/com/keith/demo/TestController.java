@@ -3,6 +3,7 @@ package com.keith.demo;
 import com.keith.demo.entity.GatewayChannel;
 import com.keith.demo.mapper.gatewaychannel.GatewayChannelMapper;
 import com.keith.demo.netty.GatewayServerHandler;
+import com.keith.demo.script.JavaScriptUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelId;
@@ -13,6 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.script.ScriptEngine;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentMap;
 
@@ -40,5 +44,11 @@ public class TestController {
                 channelGroup.find(channelId).writeAndFlush(byteBuf);
             }
         }
+    }
+
+    @PostMapping("/script")
+    public void script(String key, String path) {
+        Object execute = JavaScriptUtils.execute(key, path, "fun1", "Peter Parker");
+        System.out.println(execute);
     }
 }
