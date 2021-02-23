@@ -5,20 +5,19 @@ import com.keith.demo.mapper.gatewaychannel.GatewayChannelMapper;
 import com.keith.demo.utils.RedisUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelId;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.*;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.util.CharsetUtil;
 import io.netty.util.concurrent.GlobalEventExecutor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * handlerAdded -> channelRegistered
@@ -37,14 +36,12 @@ import java.util.concurrent.ConcurrentMap;
  * @version 1.0
  * @date 2021-01-25
  */
+@Slf4j
 @Component
 public class GatewayServerHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
     @Autowired
     private GatewayChannelMapper gatewayChannelMapper;
-
-    @Autowired
-    private RedisUtil redisUtil;
 
     public static GatewayServerHandler gatewayServerHandler;
 
@@ -58,7 +55,7 @@ public class GatewayServerHandler extends SimpleChannelInboundHandler<ByteBuf> {
      * GlobalEventExecutor 全局事件执行器，是一个单例
      */
     public static final ChannelGroup channelGroup = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-    public static final ConcurrentMap<String, ChannelId> channelMap = new ConcurrentHashMap();
+    public static final ConcurrentMap<String, ChannelId> channelMap = new ConcurrentHashMap<>();
 
     /**
      * 连接建立，第一个被执行
@@ -68,10 +65,8 @@ public class GatewayServerHandler extends SimpleChannelInboundHandler<ByteBuf> {
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) {
         Channel channel = ctx.channel();
-        if (!channelGroup.contains(channel)) {
-            //将该客户端加入聊天信息推送给其他客户端
-            channelGroup.add(channel);
-        }
+        //将该客户端加入聊天信息推送给其他客户端
+        channelGroup.add(channel);
         channelMap.put(channel.id().asLongText(), channel.id());
     }
 
@@ -112,7 +107,9 @@ public class GatewayServerHandler extends SimpleChannelInboundHandler<ByteBuf> {
             } else {
                 gatewayServerHandler.gatewayChannelMapper.insertGatewayChannel(channel.id().asLongText(), content);
             }
-        } else {
+        } else if(content.startsWith("z")){
+            NettyTools.setReceiveMsg(channel.id().asLongText(),content);
+        }else{
             //根据指令执行脚本
             //todo 对线程或者队列去处理消息，防止阻塞
             ctx.channel().eventLoop().execute(() -> {
