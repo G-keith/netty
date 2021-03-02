@@ -47,6 +47,13 @@ public class QuartzUtils {
         scheduler.rescheduleJob(triggerKey, buildCronTrigger(jobName, jobGroup, time));
     }
 
+    /**
+     * 构建Trigger对象
+     * @param jobName
+     * @param jobGroup
+     * @param time
+     * @return
+     */
     private static Trigger buildCronTrigger(String jobName, String jobGroup, int time) {
         SimpleScheduleBuilder simpleSchedule = SimpleScheduleBuilder.simpleSchedule().withIntervalInSeconds(time).repeatForever();
         return TriggerBuilder.newTrigger()
